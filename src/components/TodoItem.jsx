@@ -106,7 +106,10 @@ const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
     // 使用 clsx 動態建立 className
     <StyledTaskItem className={clsx({ done: todo.isDone })}>
       <div className="task-item-checked">
-        <span className="icon icon-checked" />
+        <span
+          className="icon icon-checked"
+          onClick={() => onToggleDone?.(todo.id)}
+        />
       </div>
       <div className="task-item-body">
         <span className="task-item-body-text">{todo.title}</span>
