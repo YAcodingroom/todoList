@@ -27,9 +27,9 @@ const TodoPage = () => {
   return (
     <div>
       TodoPage
-      <Header />
+      <Header userName="" />
       <TodoInput />
-      <TodoCollection />
+      <TodoCollection todos={dummyTodos} />
       <Footer />
     </div>
   );
