@@ -5,6 +5,7 @@ import {
   CheckHoverIcon,
 } from 'assets/images';
 import clsx from 'clsx';
+import { useRef, useState } from 'react';
 
 const StyledTaskItem = styled.div`
   min-height: 52px;
@@ -102,18 +103,49 @@ const StyledTaskItem = styled.div`
 `;
 
 const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
+  // 解決：使用者修改後按下 esc 退出編輯，如果再次點擊 input 會顯示上次修改的文字
+  // 為了解決上述問題，建立一個編輯的狀態
+  const [editInput, setEditInput] = useState(todo.title);
+  const inputRef = useRef(null);
+
+  // 使用 handleChange，讓使用者編輯時能及時看見修改的文字
+  function handleChange(e) {
+    setEditInput(e.target.value);
+  }
+
+  function handleKeyDown(e) {
+    if (inputRef.current.value.length > 0 && e.key === 'Enter') {
+      onSave?.({ id: todo.id, title: inputRef.current.value });
+    }
+    if (e.key === 'Escape') {
+      // 當使用者修改後按下 esc，將 input 欄位設定為初始的 title，避免下次點擊時顯示上次修改的文字
+      setEditInput(todo.title);
+      onEdit?.({ id: todo.id, isEdit: false });
+    }
+  }
+
   return (
     // 使用 clsx 動態建立 className
-    <StyledTaskItem className={clsx({ done: todo.isDone })}>
+    <StyledTaskItem className={clsx({ done: todo.isDone, edit: todo.isEdit })}>
       <div className="task-item-checked">
         <span
           className="icon icon-checked"
           onClick={() => onToggleDone?.(todo.id)}
         />
       </div>
-      <div className="task-item-body">
+      <div
+        className="task-item-body"
+        onDoubleClick={() => onEdit?.({ id: todo.id, isEdit: true })}
+      >
         <span className="task-item-body-text">{todo.title}</span>
-        <input className="task-item-body-input" />
+        <input
+          className="task-item-body-input"
+          // 將 defalutValue 改成 value 讓 input 成為可控的
+          value={editInput}
+          ref={inputRef}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
       </div>
       <div className="task-item-action ">
         <button className="btn-reset btn-destroy icon"></button>

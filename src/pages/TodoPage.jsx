@@ -74,6 +74,35 @@ const TodoPage = () => {
     );
   }
 
+  function handleEdit({ id, isEdit }) {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            isEdit,
+          };
+        }
+        return { ...todo, isEdit: false };
+      }),
+    );
+  }
+
+  function handleSave({ id, title }) {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            title,
+            isEdit: false,
+          };
+        }
+        return todo;
+      }),
+    );
+  }
+
   return (
     <div>
       <Header userName="" />
@@ -83,7 +112,12 @@ const TodoPage = () => {
         onAddTodo={handleAddTodo}
         onKeyDown={handleKeyDown}
       />
-      <TodoCollection todos={todos} onToggleDone={handleToggleDone} />
+      <TodoCollection
+        todos={todos}
+        onToggleDone={handleToggleDone}
+        onEdit={handleEdit}
+        onSave={handleSave}
+      />
       <Footer />
     </div>
   );
