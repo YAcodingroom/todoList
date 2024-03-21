@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Footer, Header, TodoCollection, TodoInput } from 'components';
-import { createTodo, getTodos } from '../api/todos';
+import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos';
 
 const TodoPage = () => {
   const [inputValue, setInputValue] = useState('');
@@ -58,18 +58,28 @@ const TodoPage = () => {
     }
   }
 
-  function handleToggleDone(id) {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            isDone: !todo.isDone,
-          };
-        }
-        return todo;
-      }),
-    );
+  async function handleToggleDone(id) {
+    const currentTodo = todos.find((todo) => todo.id === id);
+    try {
+      await patchTodo({
+        id,
+        isDone: !currentTodo.isDone,
+      });
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              isDone: !todo.isDone,
+            };
+          }
+          return todo;
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   function handleEdit({ id, isEdit }) {
@@ -87,23 +97,38 @@ const TodoPage = () => {
   }
 
   // 將觸發 delete 事件的項目 id 與 todos 中的 id 比對 並進行刪除
-  function handleDelete(id) {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  async function handleDelete(id) {
+    try {
+      await deleteTodo(id);
+
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    } catch (err) {
+      console.error(err);
+    }
   }
 
-  function handleSave({ id, title }) {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) => {
-        if (todo.id === id) {
-          return {
-            ...todo,
-            title,
-            isEdit: false,
-          };
-        }
-        return todo;
-      }),
-    );
+  async function handleSave({ id, title }) {
+    try {
+      await patchTodo({
+        id,
+        title,
+      });
+
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => {
+          if (todo.id === id) {
+            return {
+              ...todo,
+              title,
+              isEdit: false,
+            };
+          }
+          return todo;
+        }),
+      );
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   useEffect(function () {
