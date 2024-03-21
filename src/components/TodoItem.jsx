@@ -5,7 +5,7 @@ import {
   CheckHoverIcon,
 } from 'assets/images';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 const StyledTaskItem = styled.div`
   min-height: 52px;
@@ -104,9 +104,8 @@ const StyledTaskItem = styled.div`
 
 const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
   // 解決：使用者修改後按下 esc 退出編輯，如果再次點擊 input 會顯示上次修改的文字
-  // 為了解決上述問題，建立一個狀態
+  // 為了解決上述問題，建立一個狀態 替代 useRef
   const [editInput, setEditInput] = useState(todo.title);
-  const inputRef = useRef(null);
 
   // 使用 handleChange，讓使用者編輯時能及時看見修改的文字
   function handleChange(e) {
@@ -114,8 +113,8 @@ const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
   }
 
   function handleKeyDown(e) {
-    if (inputRef.current.value.length > 0 && e.key === 'Enter') {
-      onSave?.({ id: todo.id, title: inputRef.current.value });
+    if (editInput.length > 0 && e.key === 'Enter') {
+      onSave?.({ id: todo.id, title: editInput });
     }
     if (e.key === 'Escape') {
       // 當使用者修改後按下 esc，將 input 欄位設定為初始的 title，避免下次點擊時顯示上次修改的文字
@@ -142,7 +141,6 @@ const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
           className="task-item-body-input"
           // 將 defalutValue 改成 value 讓 input 成為可控的
           value={editInput}
-          ref={inputRef}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />
