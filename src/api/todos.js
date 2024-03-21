@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost/3001';
+const BASE_URL = 'http://localhost:3001';
 
 async function getTodos() {
   try {
@@ -27,3 +27,5 @@ async function createTodo(payload) {
 function patchTodo() {}
 
 function deleteTodo() {}
+
+export { getTodos, createTodo };
