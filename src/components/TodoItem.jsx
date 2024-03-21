@@ -104,7 +104,7 @@ const StyledTaskItem = styled.div`
 
 const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
   // 解決：使用者修改後按下 esc 退出編輯，如果再次點擊 input 會顯示上次修改的文字
-  // 為了解決上述問題，建立一個編輯的狀態
+  // 為了解決上述問題，建立一個狀態
   const [editInput, setEditInput] = useState(todo.title);
   const inputRef = useRef(null);
 
@@ -148,7 +148,11 @@ const TodoItem = ({ todo, onToggleDone, onSave, onDelete, onEdit }) => {
         />
       </div>
       <div className="task-item-action ">
-        <button className="btn-reset btn-destroy icon"></button>
+        <button
+          className="btn-reset btn-destroy icon"
+          // 在按鈕上綁定 delete event handler
+          onClick={() => onDelete(todo.id)}
+        ></button>
       </div>
     </StyledTaskItem>
   );

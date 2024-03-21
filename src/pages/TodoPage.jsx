@@ -88,6 +88,11 @@ const TodoPage = () => {
     );
   }
 
+  // 將觸發 delete 事件的項目 id 與 todos 中的 id 比對 並進行刪除
+  function handleDelete(id) {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  }
+
   function handleSave({ id, title }) {
     setTodos((prevTodos) =>
       prevTodos.map((todo) => {
@@ -117,6 +122,7 @@ const TodoPage = () => {
         onToggleDone={handleToggleDone}
         onEdit={handleEdit}
         onSave={handleSave}
+        onDelete={handleDelete}
       />
       <Footer />
     </div>
