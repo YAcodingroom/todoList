@@ -31,10 +31,11 @@ const StyledButton = styled.button`
   }
 `;
 
-const Footer = () => {
+const Footer = ({ todos }) => {
+  // 從 TodoPage 傳遞 todos 進來 再用 length 去算出項目數 就不用另外建立狀態
   return (
     <StyledFooter>
-      <p>剩餘項目數： 0</p>
+      <p>剩餘項目數： {todos.length}</p>
       <StyledButton>登出</StyledButton>
     </StyledFooter>
   );
