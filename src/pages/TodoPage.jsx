@@ -156,7 +156,7 @@ const TodoPage = () => {
 
   useEffect(
     function () {
-      if (isAuthenticated) navigate('/login');
+      if (!isAuthenticated) navigate('/login');
     },
     [navigate, isAuthenticated],
   );
