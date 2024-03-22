@@ -4,11 +4,11 @@ import {
   AuthButton,
   AuthLinkText,
 } from 'components/common/auth.styled';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
-import { register } from 'api/auth';
+import { checkPermission, register } from 'api/auth';
 import Swal from 'sweetalert2';
 
 const SignUpPage = () => {
@@ -49,6 +49,24 @@ const SignUpPage = () => {
       position: 'top',
     });
   }
+
+  useEffect(
+    function () {
+      async function checkTokenIsValid() {
+        const authToken = localStorage.getItem('authToken');
+
+        if (!authToken) return;
+
+        const result = await checkPermission(authToken);
+
+        if (result) {
+          navigate('/todo');
+        }
+      }
+      checkTokenIsValid();
+    },
+    [navigate],
+  );
 
   return (
     <AuthContainer>

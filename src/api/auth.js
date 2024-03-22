@@ -37,4 +37,19 @@ async function register({ username, password, email }) {
   }
 }
 
-export { login, register };
+async function checkPermission(authToken) {
+  try {
+    // 使用 test-token API
+    const res = await axios.get(`${AUTH_URL}/test-token`, {
+      headers: {
+        Authorization: 'Bearer ' + authToken,
+      },
+    });
+
+    return res.data.success;
+  } catch (err) {
+    console.error('[Check permission failed]: ', err);
+  }
+}
+
+export { login, register, checkPermission };
