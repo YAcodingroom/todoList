@@ -5,7 +5,7 @@ import {
   AuthLinkText,
 } from 'components/common/auth.styled';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
 import { register } from 'api/auth';
@@ -15,6 +15,7 @@ const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   async function handleClick() {
     if (username.length === 0 || password.length === 0 || email.length === 0)
@@ -36,6 +37,7 @@ const SignUpPage = () => {
         timer: 1200,
         position: 'top',
       });
+      navigate('/todo');
       return;
     }
 
