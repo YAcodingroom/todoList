@@ -19,6 +19,22 @@ async function login({ username, password }) {
   }
 }
 
-function signup() {}
+async function register({ username, password, email }) {
+  try {
+    const { data } = await axios.post(`${AUTH_URL}/register`, {
+      username,
+      password,
+      email,
+    });
+    const { authToken } = data;
 
-export { login };
+    if (authToken) {
+      return { success: true, ...data };
+    }
+    return data;
+  } catch (err) {
+    console.error('[Register failed]: ', err);
+  }
+}
+
+export { login, register };

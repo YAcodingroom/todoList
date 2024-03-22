@@ -8,11 +8,45 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ACLogoIcon } from 'assets/images';
 import { AuthInput } from 'components';
+import { register } from 'api/auth';
+import Swal from 'sweetalert2';
 
 const SignUpPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+
+  async function handleClick() {
+    if (username.length === 0 || password.length === 0 || email.length === 0)
+      return;
+
+    const { success, authToken } = await register({
+      username,
+      password,
+      email,
+    });
+
+    if (success) {
+      localStorage.setItem('authToken', authToken);
+
+      Swal.fire({
+        title: '註冊成功',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1200,
+        position: 'top',
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: '帳號或 email 已存在',
+      icon: 'error',
+      showConfirmButton: false,
+      timer: 1200,
+      position: 'top',
+    });
+  }
 
   return (
     <AuthContainer>
@@ -48,7 +82,7 @@ const SignUpPage = () => {
           onChange={(passwordValue) => setPassword(passwordValue)}
         />
       </AuthInputContainer>
-      <AuthButton>註冊</AuthButton>
+      <AuthButton onClick={handleClick}>註冊</AuthButton>
       <Link to="/login">
         <AuthLinkText>取消</AuthLinkText>
       </Link>
