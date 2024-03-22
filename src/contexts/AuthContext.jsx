@@ -1,21 +1,38 @@
 import { checkPermission, login, register } from 'api/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
 import * as jwt from 'jsonwebtoken';
 import { useLocation } from 'react-router-dom';
 
-const defaultAuthContext = {
+const AuthContext = createContext();
+
+const initialState = {
   isAuthenticated: false,
   currentMember: null,
-  register: null,
-  login: null,
-  logout: null,
 };
 
-const AuthContext = createContext(defaultAuthContext);
+function reducer(state, action) {
+  switch (action.type) {
+    case 'login':
+      return {
+        ...state,
+        isAuthenticated: true,
+        currentMember: {
+          id: action.payload.sub,
+          name: action.payload.name,
+        },
+      };
+    case 'logout':
+      return { ...initialState };
+    default:
+      throw new Error('Unknow action');
+  }
+}
 
 function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [payload, setPayload] = useState(null);
+  const [{ isAuthenticated, currentMember }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
   const { pathname } = useLocation();
 
   async function handleRegister(data) {
@@ -26,12 +43,10 @@ function AuthProvider({ children }) {
     });
     const tempPayload = jwt.decode(authToken);
     if (tempPayload) {
-      setPayload(tempPayload);
-      setIsAuthenticated(true);
+      dispatch({ type: 'login', payload: tempPayload });
       localStorage.setItem('authToken', authToken);
     } else {
-      setPayload(null);
-      setIsAuthenticated(false);
+      dispatch({ type: 'logout' });
     }
     return success;
   }
@@ -41,22 +56,20 @@ function AuthProvider({ children }) {
       username: data.username,
       password: data.password,
     });
+
     const tempPayload = jwt.decode(authToken);
     if (tempPayload) {
-      setPayload(tempPayload);
-      setIsAuthenticated(true);
+      dispatch({ type: 'login', payload: tempPayload });
       localStorage.setItem('authToken', authToken);
     } else {
-      setPayload(null);
-      setIsAuthenticated(false);
+      dispatch({ type: 'logout' });
     }
     return success;
   }
 
   function handleLogout() {
     localStorage.removeItem('authToken');
-    setPayload(null);
-    setIsAuthenticated(false);
+    dispatch({ type: 'logout' });
   }
 
   useEffect(
@@ -65,20 +78,17 @@ function AuthProvider({ children }) {
         const authToken = localStorage.getItem('authToken');
 
         if (!authToken) {
-          setIsAuthenticated(false);
-          setPayload(null);
+          dispatch({ type: 'logout' });
           return;
         }
 
         const result = await checkPermission(authToken);
 
         if (result) {
-          setIsAuthenticated(true);
           const tempPayload = jwt.decode(authToken);
-          setPayload(tempPayload);
+          dispatch({ type: 'login', payload: tempPayload });
         } else {
-          setIsAuthenticated(false);
-          setPayload(null);
+          dispatch({ type: 'logout' });
         }
       }
       checkTokenIsValid();
@@ -90,10 +100,7 @@ function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         isAuthenticated,
-        currentMember: payload && {
-          id: payload.sub,
-          name: payload.name,
-        },
+        currentMember,
         register: handleRegister,
         login: handleLogin,
         logout: handleLogout,
