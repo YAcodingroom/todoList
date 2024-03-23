@@ -12,6 +12,7 @@ This is a exercise to build todo list with React.
 
 # Screenshot:
 
+![login page](./screenshot/loginPage.png)
 ![todo page](./screenshot/todoPage.png)
 ![edit mode](./screenshot/editMode.png)
 
