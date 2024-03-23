@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'contexts/AuthContext';
 import styled from 'styled-components';
 
 const StyledFooter = styled.footer`
@@ -34,17 +34,16 @@ const StyledButton = styled.button`
 
 const Footer = ({ todos }) => {
   // 從 TodoPage 傳遞 todos 進來 再用 length 去算出項目數 就不用另外建立狀態
-  const navigate = useNavigate();
+  const { logout } = useAuth();
 
-  function handleStorage() {
-    localStorage.removeItem('authToken');
-    navigate('/login');
+  function handleCLick() {
+    logout();
   }
 
   return (
     <StyledFooter>
       <p>剩餘項目數： {todos.length}</p>
-      <StyledButton onClick={handleStorage}>登出</StyledButton>
+      <StyledButton onClick={handleCLick}>登出</StyledButton>
     </StyledFooter>
   );
 };
