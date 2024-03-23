@@ -18,6 +18,30 @@ This is a exercise to build todo list with React.
 ## Built with
 
 - React
+- React Router
+- json-server
+- clsx
+- sweetalert2
+- axios
+- JSON web token
+
+### Install package
+
+```Shell
+npm install json-server clsx sweetalert2 axios jsonwebtoken
+```
+
+### Set the script in package.json
+
+```JSON
+"dev-server": "json-server --watch data/db.json --port 3001"
+```
+
+## Runs the server
+
+```Shell
+npm run dev-server
+```
 
 ## Runs the app
 
