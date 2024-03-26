@@ -24,6 +24,13 @@ This is a exercise to build todo list with React.
 - sweetalert2
 - axios
 - JSON web token
+- git
+
+## Try it on the GitHub pages
+
+- Live URL: https://yacodingroom.github.io/login
+
+## Or clone it and..
 
 ### Install package
 
@@ -31,7 +38,7 @@ This is a exercise to build todo list with React.
 npm install clsx sweetalert2 axios jsonwebtoken
 ```
 
-## Runs the app
+### Runs the app
 
 ```Shell
 npm start
