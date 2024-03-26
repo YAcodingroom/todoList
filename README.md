@@ -28,7 +28,7 @@ This is a exercise to build todo list with React.
 
 ## Try it on the GitHub pages
 
-- Live URL: https://yacodingroom.github.io/login
+- Live URL: https://yacodingroom.github.io/todoList/
 
 ## Or clone it and..
 
