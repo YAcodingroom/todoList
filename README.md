@@ -20,7 +20,6 @@ This is a exercise to build todo list with React.
 
 - React
 - React Router
-- json-server
 - clsx
 - sweetalert2
 - axios
@@ -29,19 +28,7 @@ This is a exercise to build todo list with React.
 ### Install package
 
 ```Shell
-npm install json-server clsx sweetalert2 axios jsonwebtoken
-```
-
-### Set the script in package.json
-
-```JSON
-"dev-server": "json-server --watch data/db.json --port 3001"
-```
-
-## Runs the server
-
-```Shell
-npm run dev-server
+npm install clsx sweetalert2 axios jsonwebtoken
 ```
 
 ## Runs the app
